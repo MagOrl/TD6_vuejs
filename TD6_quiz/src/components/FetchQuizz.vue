@@ -1,20 +1,21 @@
 <script>
 export default {
+    methods: {
+        fetch: function () { this.$emit('fetch'); 
+        }
+    },
     props: {
         quizz: Object,
     },
-    methods: {
-        fetch: function () {
-            this.$emit("fetch");
-        }
-    },
-    emits: ["fetch"]
+    emits:["fetch"],
 };
 </script>
 
 <template>
-    <li>
+    <input type="button" class="btn btn-info" @click="fetch" value="refresh">
+    <li v-for="(item) in quizz">
         <label>
+            {{ item.name }}
         </label>
     </li>
 </template>

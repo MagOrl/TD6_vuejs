@@ -1,5 +1,6 @@
 <script>
 import FetchQuizz from './components/FetchQuizz.vue'
+import AddQuizz from './components/AddQuizz.vue'
 
 let data = {
   quizz: []
@@ -9,6 +10,7 @@ const url = "http://localhost:5000/questionnaires";
 export default {
   components: {
     FetchQuizz,
+    AddQuizz,
   },
   data() {
     return data;
@@ -21,9 +23,21 @@ export default {
           Accept: "application/json",
         },
       }).then((fetched_data) => fetched_data.json());
-      this.quizz.push(fetched_data);
-      console.log(this.quizz[0]);
+      this.quizz = fetched_data["questionnaires"];
+      
     },
+    add:async function(nom){
+      await fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: nom,
+      }),
+    });
+    }
   },
 };
 
@@ -32,11 +46,10 @@ export default {
 <template>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  <div>
+    <div>
+    <br>
     <h2> Quizz </h2>
-    <FetchQuizz v-for="(item, index) in quizz" :key="item.text" />
-
-<input type="button" class="btn" @click="fetch" value="refresh">
-
+    <FetchQuizz :quizz="this.quizz" @fetch="fetch" />
+    <AddQuizz @add="add" />
   </div>
 </template>
