@@ -13,4 +13,8 @@ export class Quiz{
         this.url = url;
     }
 
+    addQuestion(question){
+        this.questions.push(question);
+    }
+
 }

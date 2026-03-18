@@ -1,7 +1,7 @@
 <script setup>
-import QuizList from './components/QuizList.vue';
+  import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <QuizList/>
+  <router-view />
 </template>

@@ -18,14 +18,10 @@ async function fetchQuizs(){
 
     const data = await response.json();
 
-    console.log(data);
-
-    for(let quiz in data){
-
+    for(let quiz of data["questionnaires"]){
         quizs.value.push(
             new QuizModel(
                 quiz["name"],
-                null,
                 null,
                 quiz["uri"]
             )
