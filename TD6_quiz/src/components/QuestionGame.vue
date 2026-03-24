@@ -2,35 +2,80 @@
 import { useRoute } from 'vue-router';
 
 import {Quiz as QuizModel} from '../model/quiz.js';
-import {Question as QuestionModel} from '../model/question.js';
+import { Question as QuestionModel} from '../model/question.js';
 import { API_ENDPOINT, QUESTION_ROUTE, QUIZ_ROUTE } from '../constants.js'
 import { onBeforeMount, ref } from 'vue';
+import QuestionComponent from './QuestionComponent.vue';
 
 const route = useRoute();
 
-const questionIndex = ref(0);
+let questionIndex = ref(0);
 const quiz = ref(null);
 const answers = ref([]);
+const started = ref(false);
 
-async function fetchQuestions() {
-    const response = await fetch(`${API_ENDPOINT}${QUIZ_ROUTE}/${route.params.id}`);
+async function fetchQuiz() {
+    let response = await fetch(`${API_ENDPOINT}${QUIZ_ROUTE}/${route.params.id}`);
 
     if(!response.ok){
         return;
     }
 
-    const data = await response.json();
+    let data = await response.json();
 
-    console.log(data);
+    quiz.value = new QuizModel(
+                data.name,
+                [],
+                data.uri
+        );
+
+    response = await fetch(`${API_ENDPOINT}${QUIZ_ROUTE}/${route.params.id}${QUESTION_ROUTE}`);
+
+    if(!response.ok){
+        return;
+    }
+
+    data = await response.json();
+
+    for(let question_raw of data.questions){
+        quiz.value.addQuestion(
+            new QuestionModel(
+                question_raw.num,
+                question_raw.title,
+                question_raw.possibilities,
+                question_raw.answer
+            )
+        );
+    }
+    
+}
+
+function saveAnswer(payload){
+    answers.value.push(payload.answer);
+    nextQuestion();
+}
+
+function nextQuestion(){
+    questionIndex.value ++;
 }
 
 onBeforeMount(async () => {
-    await fetchQuestions();
+    await fetchQuiz();
 })
 
 </script>
 
 <template>
-    <h1>Some text</h1>
+    <div v-if="quiz">
+        <h1>{{quiz.title}}</h1>
 
+        <input v-if="!started" type="button" value="Start the Quiz" @click="started = true">
+        <QuestionComponent v-else 
+            :question="quiz.questions[questionIndex]" 
+            @saveAnswer="saveAnswer"
+        />
+    </div>
+    <div v-else>
+        <p>Loading quiz ...</p>
+    </div>
 </template>
