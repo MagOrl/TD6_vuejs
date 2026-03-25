@@ -2,6 +2,7 @@ import { createMemoryHistory, createRouter } from 'vue-router';
 
 import QuizList from '../components/QuizList.vue';
 import QuestionGame from '../components/QuestionGame.vue';
+import GameResults from '../components/GameResults.vue';
 
 const routes = [
     {
@@ -14,8 +15,14 @@ const routes = [
         path : '/quizs/:id(\\d+)',
         alias : '/:id(\\d+)',
         name : "game",
-        component : QuestionGame
-    }
+        component : QuestionGame,
+    },
+    {
+        path : '/quizs/:id(\\d+)/results',
+        name : "results",
+        component : GameResults,
+        props: true,
+    },
 ] 
 
 export const router = createRouter({

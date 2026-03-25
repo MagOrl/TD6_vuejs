@@ -1,5 +1,5 @@
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import {Quiz as QuizModel} from '../model/quiz.js';
 import { Question as QuestionModel} from '../model/question.js';
@@ -8,6 +8,7 @@ import { onBeforeMount, ref } from 'vue';
 import QuestionComponent from './QuestionComponent.vue';
 
 const route = useRoute();
+const router = useRouter();
 
 let questionIndex = ref(0);
 const quiz = ref(null);
@@ -56,7 +57,21 @@ function saveAnswer(payload){
 }
 
 function nextQuestion(){
-    questionIndex.value ++;
+    console.log(questionIndex.value);
+    console.log(getQuestions());
+    if(questionIndex.value < (getQuestions().length) -1){
+        console.log("next")
+        questionIndex.value ++;
+    }
+    else{
+        router.push({
+            name: "results"
+        })
+    }
+}
+
+function getQuestions(){
+    return JSON.parse(JSON.stringify(quiz.value.questions));
 }
 
 onBeforeMount(async () => {
