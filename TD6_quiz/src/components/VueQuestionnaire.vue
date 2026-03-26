@@ -46,7 +46,7 @@ export default {
             </li>
         </div>
         <aside class="questionnaire-aside">
-            <AddQuestion />
+            <AddQuestion :id_quizz="parseInt(this.id_quizz)"/>
         </aside>
     </section>
 </template>

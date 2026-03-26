@@ -1,25 +1,55 @@
 <script>
+const url = "http://localhost:5000/questionnaires";
+
 export default {
     data() {
         return {
             nom: "",
+            type_question: "ouverte",
+            answer: "",
+            answer_fermee: "",
+            answer_fermee_real: "",
         };
     },
     methods: {
-        add: async function (nom, type) {
-            await fetch(url, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    name: nom,
-                }),
-            });
+        add: async function (nom, type_question, answer, id_quizz, answer_fermee, answer_fermee_real) {
+            if (this.type_question == "ouverte") {
+                await fetch(url + "/" + id_quizz + "/questions", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        title: nom,
+                        type: type_question,
+                        answer: answer,
+                    }),
+                });
+            } else {
+                await fetch(url + "/" + id_quizz + "/questions", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        title: nom,
+                        type: type_question,
+                        answer: answer_fermee_real,
+                        proposition1: answer_fermee_real,
+                        proposition2: answer_fermee,
+                    }),
+                });
+            }
         },
+
     },
-};
+    props: {
+        id_quizz: Number
+    }
+
+}
 </script>
 <template>
     <form class="question-form">
@@ -27,11 +57,20 @@ export default {
         <label for="question-name">Intitulé</label>
         <input id="question-name" type="text" placeholder="nouvelle question" v-model="nom">
 
-        <select id="list">
-            <option value="Ouverte"> Ouverte</option>
-            <option value="Fermé"> Fermé </option>
+        <select id="list" v-model="type_question">
+            <option value="ouverte"> Ouverte</option>
+            <option value="fermee"> Fermé </option>
         </select>
-        <input type="button" class="question-form-btn" value="ajouter" @click="add" />
+        <div v-if='type_question == "ouverte"'>
+            <input id="question-name" type="text" placeholder="mettre la bonne réponse" v-model="answer">
+        </div>
+        <div v-else>
+            <input id="question-name" type="text" placeholder="mettre la mauvaise réponse" v-model="answer_fermee">
+            <input id="question-name" type="text" placeholder="mettre la bonne réponse" v-model="answer_fermee_real">
+        </div>
+
+        <input type="button" class="question-form-btn" value="ajouter"
+            @click="add(nom, type_question, answer, id_quizz, answer_fermee, answer_fermee)" />
     </form>
 </template>
 
