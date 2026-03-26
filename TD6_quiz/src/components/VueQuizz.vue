@@ -1,5 +1,4 @@
 <script>
-import FetchQuizz from './FetchQuizz.vue'
 import AddQuizz from './AddQuizz.vue'
 import DeleteQuizz from './DeleteQuizz.vue'
 import UpdateQuizz from './UpdateQuizz.vue'
@@ -11,13 +10,15 @@ const url = "http://localhost:5000/questionnaires";
 
 export default  {
   components: {
-    FetchQuizz,
     AddQuizz,
     DeleteQuizz,
     UpdateQuizz,
   },
   data() {
     return data;
+  },
+  mounted() {
+    this.fetch();
   },
   methods: {
     fetch: async function () {
@@ -74,7 +75,6 @@ export default  {
   <div>
     <br>
     <h2> Quizz </h2>
-    <FetchQuizz :quizz="this.quizz" @fetch="fetch" />
     <AddQuizz @add="add" />
 
     <ul class="list-group" style="margin-top: 0.75rem;">
