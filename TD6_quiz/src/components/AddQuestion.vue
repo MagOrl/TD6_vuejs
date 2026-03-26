@@ -42,12 +42,19 @@ export default {
                     }),
                 });
             }
+
+            this.nom = "";
+            this.answer = "";
+            this.answer_fermee = "";
+            this.answer_fermee_real = "";
+            this.$emit('added');
         },
 
     },
     props: {
         id_quizz: Number
-    }
+    },
+    emits: ['added'],
 
 }
 </script>

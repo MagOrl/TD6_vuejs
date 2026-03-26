@@ -16,9 +16,4 @@ export default {
 
 <template>
     <input type="button" class="btn btn-info" @click="fetch" value="refresh">
-    <li v-for="(item) in quizz">
-        <label @click="goToQuestionnaire(item)">
-            {{ item.name }}
-        </label>
-    </li>
 </template>

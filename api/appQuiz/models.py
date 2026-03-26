@@ -102,16 +102,27 @@ class Questionnaire(db.Model):
         except IntegrityError as e:
             return None
 
-    def remove_question(self, num: int) -> Question|None:
+    def remove_question(self, num: int) -> dict|None:
 
-        question: Question = db.session.execute(db.select(Question).where(Question.id_quiz == self.id and Question.num == num))
-        
-        if not question:
+        question: Question | None = (
+            db.session.execute(
+                db.select(Question).where(
+                    (Question.id_quiz == self.id) & (Question.num == num)
+                )
+            )
+            .scalars()
+            .first()
+        )
+
+        if question is None:
             return None
-        
+
+        # Serialize before deletion to avoid DetachedInstanceError after commit
+        question_json: dict = question.to_json()
+
         db.session.delete(question)
         db.session.commit()
-        return question
+        return question_json
     
 class QuestionOuverte(Question):
 
