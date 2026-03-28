@@ -1,7 +1,8 @@
-import { createMemoryHistory, createRouter } from 'vue-router';
+import { createWebHistory, createRouter } from 'vue-router';
 
 import QuizList from '../components/QuizList.vue';
 import QuestionGame from '../components/QuestionGame.vue';
+import Question from '../components/QuestionComponent.vue';
 import GameResults from '../components/GameResults.vue';
 
 const routes = [
@@ -18,14 +19,18 @@ const routes = [
         component : QuestionGame,
     },
     {
+        path : '/quizs/:id(\\d+)/question/:questionIndex(\\d+)',
+        name : "question",
+        component : Question,
+    },
+    {
         path : '/quizs/:id(\\d+)/results',
         name : "results",
         component : GameResults,
-        props: true,
     },
 ] 
 
 export const router = createRouter({
-    history : createMemoryHistory(),
+    history : createWebHistory(),
     routes
 });

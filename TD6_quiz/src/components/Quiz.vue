@@ -1,6 +1,7 @@
 <script setup>
 import { Quiz } from '../model/quiz.js';
 import { useRouter } from 'vue-router';
+import { useSelectedQuizStore } from '../stores/selected_quiz.js';
 
 const router = useRouter();
 
@@ -8,11 +9,13 @@ const props = defineProps({
     quiz : Quiz
 })
 
+const store = useSelectedQuizStore();
+
 function openQuiz(){
-    console.log("opening quiz");
+    store.setSelectedQuiz(props.quiz);
     router.push({
         name: "game",
-        params : {id : props.quiz.url.split('/').at(-1)}
+        params : {id : props.quiz.id}
     });
 }
 

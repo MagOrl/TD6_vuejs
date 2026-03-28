@@ -23,7 +23,7 @@ async function fetchQuizs(){
             new QuizModel(
                 quiz["name"],
                 null,
-                quiz["uri"]
+                quiz["id"]
             )
         )
     }

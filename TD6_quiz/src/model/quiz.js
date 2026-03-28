@@ -1,16 +1,14 @@
 
-import { Question } from "./question.js";
-
 export class Quiz{
 
     constructor(
         title,
         questions,
-        url
+        id
     ){
         this.title = title;
         this.questions = questions;
-        this.url = url;
+        this.id = id;
     }
 
     addQuestion(question){
