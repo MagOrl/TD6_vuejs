@@ -38,7 +38,7 @@ async function fetchQuiz() {
             new QuestionModel(
                 question_raw.num,
                 question_raw.title,
-                question_raw.possibilities ? question_raw.possibilities : [],
+                question_raw.propositions ? question_raw.propositions : [],
                 question_raw.answer
             )
         );

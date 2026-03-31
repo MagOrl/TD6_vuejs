@@ -6,13 +6,16 @@ const store = useSelectedQuizStore();
 const results = [];
 
 for(let resultIndex in store.selectedQuiz.questions){
-    
+
     const question = store.selectedQuiz.questions[resultIndex];
+
+    const answer = question.possibilities.length > 0 ? question.possibilities[parseInt(store.answers[resultIndex])] : store.answers[resultIndex];
+    const solution = question.possibilities.length > 0 ? question.possibilities[question.answer] : question.answer;
     results.push(
         {
             "question" : question.title,
-            "answer" : store.answers[resultIndex],
-            "solution" : question.answer,
+            "answer" : answer,
+            "solution" : solution,
             "result" : question.answer == store.answers[resultIndex],
         }
     );

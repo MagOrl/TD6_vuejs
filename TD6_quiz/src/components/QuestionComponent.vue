@@ -8,7 +8,8 @@ const store = useSelectedQuizStore();
 let answer = ref("");
 
 function saveAnswer(){
-    store.setAnswer(answer);
+    console.log(answer);
+    store.setAnswer(answer.value);
     const next = store.nextQuestion();
 
     router.push({ 
@@ -35,6 +36,17 @@ function showResults(){
     null;
 }
 
+function backQuestion(){
+    const previous = store.previousQuestion();
+    router.push({ 
+        name: "question",
+        params : { 
+            id: store.selectedQuiz.id,
+            questionIndex : previous}
+        }
+    );
+}
+
 </script>
 
 <template>
@@ -42,15 +54,20 @@ function showResults(){
         <p>{{ store.currentQuestion.title }}</p>
         <div v-if="store.currentQuestion.possibilities?.length == 0">
             <input type="text" v-model="answer">
-            <input type="button" value="Next" @click="saveAnswer">
         </div>
         <div v-else>
-            <div v-for="possibility in store.currentQuestion.possibilities">
-                <input type="radio" :value="possibility" v-model="answer">
-            </div>
+            <fieldset>
+                <legend>Possibilitées</legend>
+                <div v-for="possibility in store.currentQuestion.possibilities">
+                    <input type="radio" :id="possibility" :value="store.currentQuestion.possibilities.indexOf(possibility)" v-model="answer" >
+                    <label :for="possibility">{{ possibility }}</label>
+                </div>
+            </fieldset>
         </div>
 
         <div>
+            <input v-if="store.currentQuestionIndex > 0" type="button" value="Previous Question" @click="backQuestion"> 
+
             <input v-if="store.currentQuestionIndex < store.maxQuestionIndex" type="button" value="Next Question" @click="saveAnswer">
             <input v-else type="button" value="Validate Quiz" @click="showResults"> 
         </div>
