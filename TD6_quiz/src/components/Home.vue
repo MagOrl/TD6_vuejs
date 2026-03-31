@@ -1,11 +1,9 @@
-<script setup>
 
-</script>
 <template>
     <div class="container">
         <div class="section">
             <h3>Connexion admin</h3>
-            <button>Se connecter</button>
+            <button @click="$router.push('/connexion/')">Se connecter</button>
         </div>
         <div class="section">
             <h3>Faire le quizz</h3>

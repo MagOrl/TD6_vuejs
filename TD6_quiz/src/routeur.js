@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 
 import Home from "./components/Home.vue";
+import AdminConnexion from "./components/AdminConnexion.vue";
 import QuizList from "./components/QuizList.vue";
 import QuestionGame from "./components/QuestionGame.vue";
 import Question from "./components/QuestionComponent.vue";
@@ -9,7 +10,7 @@ import VueQuizz from "./components/VueQuizz.vue";
 import VueQuestionnaire from "./components/VueQuestionnaire.vue";
 
 const routes = [
-  { path: "/", alias:["/home","/about"],component: Home },
+  { path: "/", alias: ["/home", "/about"], component: Home },
   { path: "/quizz", name: "VueQuizz", component: VueQuizz },
   { path: "/quizz/:id", component: VueQuestionnaire },
   {
@@ -33,6 +34,10 @@ const routes = [
     path: "/quizs/:id(\\d+)/results",
     name: "results",
     component: GameResults,
+  },
+  {
+    path: "/connexion",
+    component: AdminConnexion,
   },
 ];
 
