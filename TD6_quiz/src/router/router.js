@@ -5,6 +5,8 @@ import QuestionGame from '../components/QuestionGame.vue';
 import Question from '../components/QuestionComponent.vue';
 import GameResults from '../components/GameResults.vue';
 
+import { useSelectedQuizStore } from '../stores/selected_quiz';
+
 const routes = [
     {
         path: '/',
@@ -17,16 +19,34 @@ const routes = [
         alias : '/:id(\\d+)',
         name : "game",
         component : QuestionGame,
+        beforeEnter: (to, from) => {
+          const selectedQuizStore = useSelectedQuizStore();
+          if (selectedQuizStore.selectedQuiz == null) {
+            return { name : "quizs"}
+          }
+        },
     },
     {
         path : '/quizs/:id(\\d+)/question/:questionIndex(\\d+)',
         name : "question",
         component : Question,
+        beforeEnter: (to, from) => {
+          const selectedQuizStore = useSelectedQuizStore();
+          if (selectedQuizStore.selectedQuiz == null) {
+            return { name : "quizs"}
+          }
+        },
     },
     {
         path : '/quizs/:id(\\d+)/results',
         name : "results",
         component : GameResults,
+        beforeEnter: (to, from) => {
+          const selectedQuizStore = useSelectedQuizStore();
+          if (selectedQuizStore.selectedQuiz == null) {
+            return { name : "quizs"}
+          }
+        },
     },
 ] 
 
