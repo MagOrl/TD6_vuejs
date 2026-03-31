@@ -5,10 +5,9 @@ import { router } from '../router/router';
 
 const store = useSelectedQuizStore();
 
-let answer = ref("");
+const answer = ref("");
 
 function saveAnswer(){
-    console.log(answer);
     store.setAnswer(answer.value);
     const next = store.nextQuestion();
 
@@ -20,11 +19,11 @@ function saveAnswer(){
         }
     );
 
-    answer = "";
+    answer.value = "";
 }
 
 function showResults(){
-    store.setAnswer(answer);
+    store.setAnswer(answer.value);
     const pursue = confirm("Are you sure you want to finish this Quiz ?")
 
     pursue ?
