@@ -13,6 +13,7 @@ def mkpath(p):
     )
 
 cors = CORS(app)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = (f"sqlite:///{mkpath("../quiz.db")}")
 app.config["SQLALCHEMY_ECHO"] = True
 
