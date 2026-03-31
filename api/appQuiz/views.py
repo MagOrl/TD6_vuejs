@@ -35,10 +35,32 @@ def create_questionnaire():
 
     return make_public_questionnaire(questionaire), 201
 
+@app.route('/questionnaires/<int:id_questionnaire>', methods=['PUT'])
+def update_questionnaire(id_questionnaire: int):
+    if not request.is_json:
+        abort(400, description="Request must be JSON")
+
+    if "name" not in request.json or not isinstance(request.json.get("name"), str):
+        abort(400, description="Missing name in request data")
+
+    questionnaire: Questionnaire = get_questionnaire(id_questionnaire)
+    if not questionnaire:
+        abort(404, description=f"Questionnaire with ID {id_questionnaire} not found")
+
+    questionnaire.name = request.json.get("name")
+    try:
+        from .app import db
+        db.session.add(questionnaire)
+        db.session.commit()
+    except Exception:
+        abort(400, description="Couldn't update the quiz")
+
+    return make_public_questionnaire(questionnaire), 200
+
 @app.route('/questionnaires/<int:id_question>', methods=['DELETE'])
 def remove_questionnaire(id_question: int):
 
-    questionnaire = get_questionnaire_by_id(id_question)
+    questionnaire: Questionnaire = get_questionnaire(id_question)
 
     if not questionnaire:
         abort(404, description=f"Questionnaire with ID {id_question} not found")
@@ -117,12 +139,17 @@ def delete_question(id_questionnaire: int, num_question: int):
     if not questionnaire:
         abort(404, description=f"Questionnaire with ID {id_questionnaire} not found")
 
-    question: Question = questionnaire.get_question(num_question)
-
-    if not questionnaire.remove_question(num_question):
+    removed_question_json = questionnaire.remove_question(num_question)
+    if removed_question_json is None:
         abort(400, description="Num not found or can't be deleted")
 
-    return make_public_question(questionnaire.id ,question), 200
+    removed_question_json['uri'] = url_for(
+        'get_question_by_num',
+        id_questionnaire=id_questionnaire,
+        num_question=num_question,
+        _external=True,
+    )
+    return removed_question_json, 200
 
 def make_public_questionnaire(questionnaire: Questionnaire):
     questionnaire_json = questionnaire.to_json()
