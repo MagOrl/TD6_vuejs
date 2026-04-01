@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useSelectedQuizStore } from "../stores/selected_quiz"
-import { router } from '../router/router';
+import { router } from '../routeur.js';
 
 const store = useSelectedQuizStore();
 
