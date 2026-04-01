@@ -1,6 +1,4 @@
 <script>
-import { onBeforeRouteUpdate } from 'vue-router';
-
 export default {
     data() {
         return {
@@ -13,7 +11,9 @@ export default {
     methods: {
         adminco: function () {
             if (this.form_password == this.password && this.form_username == this.username) {
-                this.$router.push("/quizz")
+                localStorage.setItem("admin-auth", "true");
+                const redirect = this.$route.query.redirect;
+                this.$router.push(typeof redirect === "string" ? redirect : "/quizz");
             }
         },
     },

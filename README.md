@@ -1,64 +1,105 @@
 # TD6_vuejs
-TD6 du rendu en architecture logicelle 
 
-# Lancement
+TD6 du rendu en architecture logicielle.
 
-Pour lancer l'api, il faut activer un environement virtuel dans le dossier `/api/` avec la commande : 
+## Sujet
+
+Développer un client web se connectant au serveur REST de quiz, permettant de :
+
+- Lister, créer, supprimer et mettre à jour des quiz
+- Lister, créer, supprimer et mettre à jour des questions
+- Gérer **les deux types de questions** :
+    - **Question ouverte** : réponse libre (champ texte)
+    - **Question fermée** : choix multiples (propositions)
+
+Puis **regrouper** les deux parties dans **une seule application** Vue, avec navigation via **Vue Router** :
+
+- Une partie **jeu** (répondre aux quiz)
+- Une partie **édition/admin** (CRUD)
+
+L’accès à la partie édition est **protégé par un mot de passe** (stocké en dur dans le code).
+
+## Lancement
+
+### API (Flask)
+
+Depuis la racine du projet :
+
 ```bash
-cd api # Si vous êtes dans le dossier racine du projet
+cd api
 
 python -m venv .venv
-source .venv/bin/activate           # & .venv/Script/activate pour windows
+source .venv/bin/activate           # Windows: .venv/Scripts/activate
 
-pip install -r requirements.txt     # Installer les dépendances
-flask syncdb                        # Créer et peupler la BD
-flask run                           # Lancer l'API Flask
-``` 
-
-Puis dans le dossier `/TD6_quiz` executer la commande :
-```bash
-cd TD6_quiz     # Si vous êtes dans la dossier racine du projet
-
-npm install     # Installer les dépendances
-npm run dev     # Lancer l'application
-
+pip install -r requirements.txt
+flask syncdb                        # Crée et peuple la BD
+flask run                           # Lance l'API Flask
 ```
 
+### Front (Vue + Vite)
 
+Dans un autre terminal, depuis la racine :
 
-## Jeu de Questionnaires
+```bash
+cd TD6_quiz
+npm install
+npm run dev
+```
 
-### Routes 
+## Architecture (1 application = jeu + admin)
 
-/quiz :
-    Affiche la liste des quizs jouable \
+L’application front est dans `TD6_quiz/`.
 
-/quizs/:id :
-    Affiche le quiz a jouer, avec la possibilité de le commencer.
-    Si pas de quiz sélectionné, redirige vers la page des quizs.
+- La navigation est gérée par Vue Router : `TD6_quiz/src/routeur.js`
+- L’application est structurée en composants (dossier `TD6_quiz/src/components/`)
 
-/quizs/:id/question/:id :
-    Affiche une question du questionnaire sélectionnée.
-    Si pas de quiz sélectionné, redirige vers la page des quizs.
+## Routes (Vue Router)
 
-/quizs/:id/results : 
-    Affiche la page de résultat du quiz actuel
-    Si pas de quiz sélectionné, redirige vers la page des quizs.
+### Partie jeu
 
+- `/quiz` : liste des quiz jouables.
+- `/quizs/:id` : écran de démarrage du quiz sélectionné.
+- `/quizs/:id/question/:questionIndex` : affiche une question du quiz.
+- `/quizs/:id/results` : affiche la page de résultats.
 
-### Composants
+### Partie administration (protégée)
 
-- `QuizList` : fetch et affiche les quizq existant, offrant la possibilité au click d'en sélectionner un, de tenter d'y répondre.
+- `/connexion` : page de connexion admin.
+- `/quizz` : administration des quiz (CRUD).
+- `/quizz/:id` : administration des questions d’un quiz (ajout/suppression).
 
-- `QuestionGame` : Affiche le "menu" permettant de démarer le quiz sélectionnée, et de le sélectionner dans le store Pinia.
+## Composants principaux
 
-- `QuestionComponent` : Affiche une question et soit les réponses possible soit un champ de réponse libre, ainsi que la possibilité de passer a la prochaine question, la précédente, et pour la dernière la possibilité de valider le quiz après confirmation.
+### Jeu
 
-- `GameResult` : Affiche les résultats du quiz, les bonnes et mauvaises réponses avec les corrections le cas échéant, aisi qu'une note, 1 points par bonne réponse.
+- `QuizList` : récupère et affiche les quiz, permet d’en sélectionner un.
+- `QuestionGame` : écran d’introduction du quiz sélectionné (démarrer, init store).
+- `QuestionComponent` : affiche une question et :
+    - soit des propositions (question fermée)
+    - soit un champ de réponse (question ouverte)
+    + navigation et validation du quiz.
+- `GameResults` : affiche les résultats (bonnes/mauvaises réponses, corrections, note).
 
-### Store
+### Administration (CRUD)
 
-Le store Pinia : useSelectedQuizStore, permet le stockage du quiz sélectionné et des réponses entrées.
+- `AdminConnexion` : authentification par identifiants **en dur**.
+- `VueQuizz` : vue/page d’admin des quiz.
+    - `AddQuizz`, `UpdateQuizz`, `DeleteQuizz`
+- `VueQuestionnaire` : vue/page d’admin des questions d’un quiz.
+    - `AddQuestion`, `DeleteQuestion`
 
-Il permet le calcul des points et tient compte de la question actuelle.
+## Store (Pinia)
+
+Le store `useSelectedQuizStore` (dossier `TD6_quiz/src/stores/`) stocke le quiz sélectionné et les réponses de l’utilisateur.
+Il permet notamment le calcul des points et la gestion de la question courante.
+
+## API REST (serveur)
+
+Le serveur est une API Flask dans `api/`.
+Le front consomme l’API via requêtes HTTP (fetch) (ex : endpoints de questionnaires et questions).
+
+## Structure du dépôt
+
+- `api/` : serveur Flask (REST)
+- `TD6_quiz/` : application Vue (Vite) regroupant jeu + administration
 
