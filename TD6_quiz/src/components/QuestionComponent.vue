@@ -19,7 +19,7 @@ function saveAnswer(){
         }
     );
 
-    answer.value = "";
+    answer.value = store.answers[next] ? store.answers[next] : "" ;
 }
 
 function showResults(){
@@ -37,6 +37,7 @@ function showResults(){
 
 function backQuestion(){
     const previous = store.previousQuestion();
+    answer.value = store.answers[previous];
     router.push({ 
         name: "question",
         params : { 
@@ -66,7 +67,10 @@ function backMenu(){
             <fieldset>
                 <legend>Possibilitées</legend>
                 <div v-for="possibility in store.currentQuestion.possibilities" class="radio-option">
-                    <input type="radio" :id="possibility" :value="store.currentQuestion.possibilities.indexOf(possibility)" v-model="answer" :checked="store.currentQuestion.possibilities.indexOf(possibility) == 0">
+                    <input type="radio" :id="possibility" :value="store.currentQuestion.possibilities.indexOf(possibility)" v-model="answer" 
+                        :checked="store.answers[store.currentQuestionIndex] ? 
+                        store.currentQuestion.possibilities.indexOf(possibility) == store.answers[store.currentQuestionIndex] : 
+                        store.currentQuestion.possibilities.indexOf(possibility) == 0">
                     <label :for="possibility">{{ possibility }}</label>
                 </div>
             </fieldset>

@@ -4,24 +4,8 @@ import { useRouter } from 'vue-router';
 
 
 const store = useSelectedQuizStore();
-const results = [];
+const results = store.processAnswersResults();
 const router = useRouter();
-
-for(let resultIndex in store.selectedQuiz.questions){
-
-    const question = store.selectedQuiz.questions[resultIndex];
-
-    const answer = question.possibilities.length > 0 ? question.possibilities[parseInt(store.answers[resultIndex])] : store.answers[resultIndex];
-    const solution = question.possibilities.length > 0 ? question.possibilities[question.answer] : question.answer;
-    results.push(
-        {
-            "question" : question.title,
-            "answer" : answer,
-            "solution" : solution,
-            "result" : question.answer == store.answers[resultIndex],
-        }
-    );
-}
 
 function backMenu(){
     router.push({name: "quizs"})

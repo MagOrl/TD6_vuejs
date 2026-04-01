@@ -57,6 +57,10 @@ function startQuiz(){
     )
 }
 
+function backMenu(){
+    router.push({name: "quizs"});
+}
+
 onBeforeMount(async () => {
     await fetchQuiz();
 })
@@ -64,6 +68,9 @@ onBeforeMount(async () => {
 </script>
 
 <template>
+    <div>
+        <button @click="backMenu">Retour Menu</button>
+    </div>
     <div v-if="store.selectedQuiz">
         <h1>{{store.selectedQuiz.title}}</h1>
 

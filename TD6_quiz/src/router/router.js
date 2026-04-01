@@ -11,7 +11,6 @@ const routes = [
     {
         path: '/',
         name : "quizs",
-        alias : "/quiz",
         component: QuizList,
     },
     {
