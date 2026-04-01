@@ -1,0 +1,2 @@
+FLASK_APP = appQuiz
+FLASK_DEBUG =1
