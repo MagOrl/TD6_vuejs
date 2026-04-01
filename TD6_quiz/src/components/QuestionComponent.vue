@@ -1,10 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useSelectedQuizStore } from "../stores/selected_quiz"
-import { useRouter } from 'vue-router';
+import { router } from '../routeur.js';
 
 const store = useSelectedQuizStore();
-const router = useRouter();
 const answer = ref("");
 
 function saveAnswer(){
